@@ -1,0 +1,32 @@
+﻿@model IEnumerable<RIC.Models.Respuesta>
+
+@{
+    ViewData["Title"] = "VistaListarRespuesta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>VistaListarRespuesta</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to List</a>
