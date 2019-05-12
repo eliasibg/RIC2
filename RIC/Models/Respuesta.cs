@@ -8,9 +8,9 @@ namespace RIC.Models
     public class Respuesta
     {
 
-        private String strRespuesta { get; set; }
-        private String strMotivo { get; set; }
-        private String blEstatus { get; set; }
+        public String strRespuesta { get; set; }
+        public String strMotivo { get; set; }
+        public bool blEstatus { get; set; }
 
     }
 }

@@ -12,11 +12,11 @@ namespace RIC.DB
     public class Connection
     {
         private int DBtimeOut = 300;
-
+        public String connectionString = string.Empty;
 
         public Connection()
         {
-
+            connectionString = GetConnString();
 
         }
 
@@ -45,32 +45,77 @@ namespace RIC.DB
         {
             DataTable dt = new DataTable();
 
-            String connectionString = GetConnString();
-
             try
             {
-                using ( var conn = new NpgsqlConnection(connectionString))
+                using (var conn = new NpgsqlConnection(connectionString))
                 {
+     
+                        //SqlCommand cmd = new SqlCommand(query, conn);
+                        NpgsqlCommand cmd = new NpgsqlCommand();
+                        cmd.CommandTimeout = DBtimeOut;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Connection = conn;
+                        cmd.CommandText = query;
 
-                    //SqlCommand cmd = new SqlCommand(query, conn);
-                    NpgsqlCommand cmd = new NpgsqlCommand();
-                    cmd.CommandTimeout = DBtimeOut;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Connection = conn;
-                    cmd.CommandText = query;
-
-                    NpgsqlDataAdapter adap = new NpgsqlDataAdapter(cmd);
-                    //cmd.Parameters.AddRange(param);
-                    adap.Fill(dt);
-                    cmd.Parameters.Clear();
+                        NpgsqlDataAdapter adap = new NpgsqlDataAdapter(cmd);
+                        //cmd.Parameters.AddRange(param);
+                        adap.Fill(dt);
+                        cmd.Parameters.Clear();
+ 
                 }
             }
             catch (Exception ex)
             {
+                
                 throw ex;
+
             }
             return dt;
         }
+
+
+        public int InsertQuery(string query, NpgsqlParameter[] param)
+        {
+            int result = 0;
+            NpgsqlConnection pgconnection = new NpgsqlConnection();
+            NpgsqlCommand command = new NpgsqlCommand();
+
+            try
+            {
+                pgconnection.ConnectionString = connectionString;
+
+                if (pgconnection.State == ConnectionState.Closed)
+                {
+                    pgconnection.Open();
+                }
+
+                command.CommandTimeout = DBtimeOut;
+                command.CommandType = CommandType.Text;
+                command.Connection = pgconnection;
+                command.Parameters.Clear();
+                if (param != null)
+                    command.Parameters.AddRange(param);
+                
+                
+                    command.CommandText = query;
+                    result = command.ExecuteNonQuery();
+                
+
+            }
+            catch (Exception ex)
+            {
+                result = 0;
+                throw ex;
+            }
+            finally
+            {
+                pgconnection.Close();
+            }
+
+            return result;
+        }
+
+
 
 
     }

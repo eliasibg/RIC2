@@ -19,7 +19,7 @@ namespace RIC.Views.Respuestas
         }
 
 
-        [System.Web.Mvc.ActionName("73092df3-02a7-4878-b1ac-7b26cfa27d88")]
+        [Microsoft.AspNetCore.Mvc.ActionName("73092df3-02a7-4878-b1ac-7b26cfa27d88")]
         public System.Web.Mvc.JsonResult Testing()
         {
             try
@@ -62,7 +62,143 @@ namespace RIC.Views.Respuestas
         }
 
 
+        [Microsoft.AspNetCore.Mvc.ActionName("5a3ca528-5427-4b94-bed7-156920a71c85")]
+        public System.Web.Mvc.JsonResult ListarRespuestas()
+        {
+            try
+            {
+                var lstRespuestas = RespuestasDL.GetRespuestas();
 
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = lstRespuestas.Count > 0 ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = lstRespuestas.Count > 0 ? "Success" : "No content",
+                    data = lstRespuestas
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
+
+
+
+        [Microsoft.AspNetCore.Mvc.ActionName("fb537461-dad4-491e-a46a-7f1048ea62c5")]
+        public System.Web.Mvc.JsonResult ComboMotivo()
+        {
+            try
+            {
+                var lstRespuestas = RespuestasDL.GetComboMotivo();
+
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = lstRespuestas.Count > 0 ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = lstRespuestas.Count > 0 ? "Success" : "No content",
+                    data = lstRespuestas
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
+
+
+
+        [Microsoft.AspNetCore.Mvc.ActionName("c9ef64e1-39b3-4aa7-a24b-47b107562783")]
+        public System.Web.Mvc.JsonResult InsertarResp(String strParameters)
+        {
+            try
+            {
+
+                string[] strParametros = strParameters.Split('|');
+                string strMotivo = strParametros[0];
+                string strResp = strParametros[1];
+
+                var blExito = RespuestasDL.InsertarInventario(strMotivo, strResp);
+
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = blExito ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = blExito ? "Success" : "No content",
+                    data = blExito
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
 
 
 

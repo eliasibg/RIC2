@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Npgsql;
 using RIC.DB;
+using RIC.Models;
 
 namespace RIC.DL
 {
@@ -43,6 +45,132 @@ namespace RIC.DL
         }
 
 
+        public static List<Respuesta> GetRespuestas()
+        {
+
+            List<Respuesta> lstInventario = new List<Respuesta>();
+            Connection objConn = new Connection();
+
+            DataTable dtResp = null;
+
+            try
+            {
+
+                dtResp = objConn.LoadDatos(QueryGetRespuestas());
+                if (dtResp.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtResp.Rows)
+                    {
+                        Respuesta objResp = new Respuesta();
+
+                        objResp.strRespuesta = row["respdesc"].ToString();
+                        objResp.strMotivo = row["descmotivo"].ToString();
+                        objResp.blEstatus = Convert.ToBoolean(Convert.ToInt32(row["respestatus"].ToString()));
+
+
+                        lstInventario.Add(objResp);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstInventario;
+
+        }
+
+        public static Dictionary<string, string> GetComboMotivo()
+        {
+
+            Dictionary<string, string> dicMotivo = new Dictionary<string, string>();
+            List<Motivo> lstInventario = new List<Motivo>();
+            Connection objConn = new Connection();
+
+            DataTable dtResp = null;
+
+            try
+            {
+
+                dtResp = objConn.LoadDatos(QueryGetMotivos());
+                if (dtResp.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtResp.Rows)
+                    {
+                        Motivo objResp = new Motivo();
+
+                        objResp.strIdMotivo = row["idmotivo"].ToString();
+                        objResp.strDescMotivo = row["descmotivo"].ToString();
+                        
+                        lstInventario.Add(objResp);
+                    }
+
+                    var lstMotivo = lstInventario;
+
+                    foreach (var item in lstMotivo)
+                    {
+                        //dicEmpresas.Add(Convert.ToString(item.IdEmpresa + "_" + item.CveEmpresa), Convert.ToString(item.NombreEmpresa));
+                        dicMotivo.Add(Convert.ToString(item.strIdMotivo), Convert.ToString(item.strDescMotivo ));
+                    }
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return dicMotivo;
+
+        }
+
+
+        public static bool InsertarInventario(string strIdMotivo, string strRespuesta)
+        {
+            bool blIsOk = true;
+
+            Connection objConn = new Connection();
+
+            using (NpgsqlConnection conn = new NpgsqlConnection(objConn.connectionString))
+            {
+                conn.Open();
+
+                using (NpgsqlTransaction tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+
+                        NpgsqlParameter[] param = new NpgsqlParameter[2];
+
+                        param[0] =    new NpgsqlParameter("IdMotivo", strIdMotivo);
+                        param[1] = new NpgsqlParameter("Respuesta", strRespuesta);
+
+
+                        int iFirma = objConn.InsertQuery(QueryInsertResp(), param);
+
+                       
+                            tr.Commit();
+
+
+                        blIsOk = true;
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                        conn.Close();
+                        return false;
+                    }
+                }
+                conn.Close();
+            }
+            return blIsOk;
+        }
+
+
 
 
         private static string QueryTest()
@@ -56,7 +184,44 @@ namespace RIC.DL
 
         }
 
+        private static string QueryGetMotivos()
+        {
 
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" Select * from motivo;");
+
+            return strQuery.ToString();
+
+        }
+
+
+        private static string QueryGetRespuestas()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" SELECT respdesc, descmotivo, respestatus");
+            strQuery.AppendLine(" FROM");
+            strQuery.AppendLine(" respuestas");
+            strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo;");
+
+            return strQuery.ToString();
+
+        }
+
+
+        private static string QueryInsertResp()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" insert into respuestas (idmotivo, RespDesc, RespEstatus)");
+            strQuery.AppendLine(" values (@IdMotivo, @Respuesta, 1);");
+
+            return strQuery.ToString();
+
+        }
 
     }
 }
