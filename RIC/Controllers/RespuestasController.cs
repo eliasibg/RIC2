@@ -7,19 +7,20 @@ using System.Web.Mvc;
 
 using RIC.DL;
 using RIC.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RIC.Views.Respuestas
 {
-    public class RespuestasController : Controller
+    public class RespuestasController : Microsoft.AspNetCore.Mvc.Controller
     {
-        public ActionResult Index()
+        public IActionResult Index()
         {
             return View("VistaIndexRespuesta");
         }
 
 
-        [ActionName("73092df3-02a7-4878-b1ac-7b26cfa27d88")]
-        public JsonResult Testing()
+        [System.Web.Mvc.ActionName("73092df3-02a7-4878-b1ac-7b26cfa27d88")]
+        public System.Web.Mvc.JsonResult Testing()
         {
             try
             {
@@ -33,7 +34,12 @@ namespace RIC.Views.Respuestas
                     data = blTest
                 };
 
-                return Json(jsonDataResult, JsonRequestBehavior.AllowGet);
+                return new System.Web.Mvc.JsonResult(){
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
 
             }
             catch (Exception ex)
@@ -45,7 +51,13 @@ namespace RIC.Views.Respuestas
                     strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
                 };
 
-                return Json(jsonDataResult, JsonRequestBehavior.AllowGet);
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
             }
         }
 
@@ -54,27 +66,27 @@ namespace RIC.Views.Respuestas
 
 
 
-        public ActionResult Crear()
+        public IActionResult Crear()
         {
             return View("VistaCrearRespuesta");
         }
 
-        public ActionResult Borrar()
+        public IActionResult Borrar()
         {
             return View("VistaBorrarRespuesta");
         }
 
-        public ActionResult Modificar()
+        public IActionResult Modificar()
         {
             return View("VistaModificarRespuesta");
         }
 
-        public ActionResult Buscar()
+        public IActionResult Buscar()
         {
             return View("VistaBuscarRespuesta");
         }
 
-        public ActionResult Listar()
+        public IActionResult Listar()
         {
             return View("VistaListarRespuesta");
         }
