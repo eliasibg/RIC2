@@ -26,7 +26,6 @@
     <Folder Include="Areas\est\Data\" />
     <Folder Include="Areas\est\Models\" />
     <Folder Include="Areas\est\Views\" />
-    <Folder Include="Views\Errores\" />
     <Folder Include="Views\Formularios\" />
     <Folder Include="Views\Reportes\" />
   </ItemGroup>

@@ -1,8 +1,10 @@
-﻿
+﻿@model IEnumerable<RIC.Models.Respuesta>
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "VistaListarRespuesta";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 
 <head>
@@ -10,7 +12,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <!-- load stylesheets -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
     <!-- Google web font "Open Sans" -->
@@ -23,7 +27,7 @@
     <link rel="stylesheet" href="~/css/Bootstrap/magnific-popup.css">
     <!-- Magnific popup style (http://dimsemenov.com/plugins/magnific-popup/) -->
     <link rel="stylesheet" href="~/css/Bootstrap/tooplate-style.css">
-
+    <script src="~/js/jquery-1.11.3.min.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -49,12 +53,11 @@
                     </button>
                     <div class="collapse navbar-toggleable-md text-xs-center text-uppercase tm-navbar" id="tmNavbar">
                         <ul class="nav navbar-nav">
-                           
                             <li class="nav-item">
-                                @Html.ActionLink("Respuestas", "Index", "Respuestas")
+                                @Html.ActionLink("Buscar errores", "buscar", "Errores")
                             </li>
                             <li class="nav-item">
-                                @Html.ActionLink("Errores", "Index", "Errores")
+                                @Html.ActionLink("Listar errores", "listar", "Errores")
                             </li>
                         </ul>
                     </div>
@@ -68,24 +71,23 @@
     </div>
 
 
-    <div class="col-md-9" style="top: 150px; left: 50px">
+    <div class="col-md-11" style="top: 150px; left: 50px">
 
-        <div class="tab-content" style="font-size:30px">
-            @*<li>
+        <div class="col-lg-12" id="dvDtError" style="display:none">
+            <div class="table-responsive">
+                <div class="dataTables_wrapper">
+                    <table id="dtError" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-hover  display nowrap no-margino table-bordered" cellspacing="0" width="100%" style="text-align:center">
+                        <thead>
+                            <tr>
+                                <th>[Error]</th>
+                                <th>[Estatus]</th>
 
-                    @Html.ActionLink("Crear respuesta", "crear", "Respuestas")
-                </li>
 
-                <li>    @Html.ActionLink("Borrar respuesta", "borrar", "Respuestas")</li>
-                <li>@Html.ActionLink("Modificar respuesta", "modificar", "Respuestas")</li>
-                <li>@Html.ActionLink("Buscar respuesta", "buscar", "Respuestas")</li>
-                <li>@Html.ActionLink("Listar respuestas", "listar", "Respuestas")</li>*@
-
-            <div>
-                <p>
-                    
-                </p>
-
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -94,3 +96,9 @@
 
 
 <script src="~/js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="~/js/Herramientas.js"></script>
+<script src="~/js/Error/VistaListarError.js"></script>
+

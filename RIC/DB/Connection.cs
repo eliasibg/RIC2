@@ -27,7 +27,7 @@ namespace RIC.DB
 
 
             var uriString = "postgres://uvuujwyb:QzFyaIL_XQwNItThtkUlRSPc_GkDQ20M@isilo.db.elephantsql.com:5432/uvuujwyb";
-
+         
             var uri = new Uri(uriString);
             var db = uri.AbsolutePath.Trim('/');
             var user = uri.UserInfo.Split(':')[0];

@@ -3,16 +3,16 @@ $(document).ready(function () {
 
     
 
-    LoadRespuestas();
+    LoadErrores();
 });
 
 
 
-function LoadRespuestas() {
+function LoadErrores() {
 
 
     $.ajax({
-        url: '/Respuestas/5a3ca528-5427-4b94-bed7-156920a71c85/'
+        url: '/Errores/5bc24248-5cbc-4a08-ae01-e1d285f39e26/'
         , method: 'GET'
         , dataType: 'JSON'
         //, data: "parameters=" + strOrdenCompleta + "|" + blIsOrden
@@ -26,12 +26,12 @@ function LoadRespuestas() {
 
                         if (source.data !== null) {
 
-                            showControls($('#dvDtResp'));
-                            $('#dtResp').DataTable({
+                            showControls($('#dvDtError'));
+                            $('#dtError').DataTable({
                                 responsive: false,
                                 lengthMenu: [5, 10, 25, 50, 100],
                                 dom: 'lCfrtip',
-                                order: [[1, 'desc']],
+                                order: [[0, 'desc']],
                                 data: source.data.data,
                                 paging: false,
                                 bAutoWidth: true,
@@ -68,18 +68,13 @@ function LoadRespuestas() {
                                 , columnDefs: [
                                     { className: "dt-head-center", targets: [0, 1] }
                                     , { className: "dt-body-left", targets: [0, 1] }
-                                    , { title: "Respuesta", data: "strRespuesta", targets: [0], bSortable: true, width: "35%" }
-                                    , {
-                                        title: "Motivo", data: "strMotivo", targets: [1], bSortable: true, width: "35%", className: "tipo"
-                                       
-
-                                    }
-                                    , { title: "Estatus", data: "strEstatus", targets: [2], bSortable: true, width: "35%" ,className: "seccion" }
+                                    , { title: "Error", data: "strDesc", targets: [0], bSortable: true, width: "35%" }                             
+                                    , { title: "Estatus", data: "strEstatus", targets: [1], bSortable: true, width: "35%" ,className: "seccion" }
                                 ],
 
                                 //Esta funcion secciona la tabla mediante una columna que se le determine.
                                 "drawCallback": function (settings) {
-                                   
+                                    
                                     var api = this.api();
                                     var rows = api.rows({ page: 'current' }).nodes();
                                     var last = null;

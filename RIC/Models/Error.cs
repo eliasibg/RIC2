@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace RIC.Models
 {
-    public class Respuesta
+    public class Error
     {
 
-        public String strRespuesta { get; set; }
-        public String strMotivo { get; set; }
+        public String strDesc { get; set; }
+        public int iId{ get; set; }
         public String strEstatus { get; set; }
 
     }

@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "VistaBuscarRespuesta";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 
 <head>
@@ -49,12 +50,20 @@
                     </button>
                     <div class="collapse navbar-toggleable-md text-xs-center text-uppercase tm-navbar" id="tmNavbar">
                         <ul class="nav navbar-nav">
-                           
-                            <li class="nav-item">
-                                @Html.ActionLink("Respuestas", "Index", "Respuestas")
+                            <li class="nav-item active selected">
+                                <div class="btn-default">@Html.ActionLink("Crear respuesta", "crear", "Respuestas")</div>
                             </li>
                             <li class="nav-item">
-                                @Html.ActionLink("Errores", "Index", "Errores")
+                                @Html.ActionLink("Borrar respuesta", "borrar", "Respuestas")
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Modificar respuesta", "modificar", "Respuestas")
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Buscar respuesta", "buscar", "Respuestas")
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Listar respuestas", "listar", "Respuestas")
                             </li>
                         </ul>
                     </div>
@@ -71,22 +80,13 @@
     <div class="col-md-9" style="top: 150px; left: 50px">
 
         <div class="tab-content" style="font-size:30px">
-            @*<li>
-
-                    @Html.ActionLink("Crear respuesta", "crear", "Respuestas")
-                </li>
-
-                <li>    @Html.ActionLink("Borrar respuesta", "borrar", "Respuestas")</li>
-                <li>@Html.ActionLink("Modificar respuesta", "modificar", "Respuestas")</li>
-                <li>@Html.ActionLink("Buscar respuesta", "buscar", "Respuestas")</li>
-                <li>@Html.ActionLink("Listar respuestas", "listar", "Respuestas")</li>*@
-
-            <div>
+           
+            @*<div>
                 <p>
-                    
+                    <button id="test">Test</button>
                 </p>
 
-            </div>
+            </div>*@
         </div>
     </div>
 

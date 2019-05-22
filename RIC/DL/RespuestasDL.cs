@@ -63,9 +63,9 @@ namespace RIC.DL
                     {
                         Respuesta objResp = new Respuesta();
 
-                        objResp.strRespuesta = row["respdesc"].ToString();
+                        objResp.strRespuesta = row["descresp"].ToString();
                         objResp.strMotivo = row["descmotivo"].ToString();
-                        objResp.blEstatus = Convert.ToBoolean(Convert.ToInt32(row["respestatus"].ToString()));
+                        objResp.strEstatus = row["descestatus"].ToString();
 
 
                         lstInventario.Add(objResp);
@@ -201,10 +201,11 @@ namespace RIC.DL
 
             StringBuilder strQuery = new StringBuilder();
 
-            strQuery.AppendLine(" SELECT respdesc, descmotivo, respestatus");
+            strQuery.AppendLine(" SELECT descresp, descmotivo, descestatus");
             strQuery.AppendLine(" FROM");
             strQuery.AppendLine(" respuestas");
-            strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo;");
+            strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo");
+            strQuery.AppendLine(" INNER JOIN estatus ON respuestas.idestatus = estatus.idestatus;");
 
             return strQuery.ToString();
 
@@ -216,7 +217,7 @@ namespace RIC.DL
 
             StringBuilder strQuery = new StringBuilder();
 
-            strQuery.AppendLine(" insert into respuestas (idmotivo, RespDesc, RespEstatus)");
+            strQuery.AppendLine(" insert into respuestas (idmotivo, descresp, idestatus)");
             strQuery.AppendLine(" values (@IdMotivo, @Respuesta, 1);");
 
             return strQuery.ToString();
