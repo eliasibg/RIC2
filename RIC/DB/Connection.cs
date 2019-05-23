@@ -73,6 +73,38 @@ namespace RIC.DB
             return dt;
         }
 
+        public DataTable LoadDatos(string query, NpgsqlParameter[] param)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+
+                    //SqlCommand cmd = new SqlCommand(query, conn);
+                    NpgsqlCommand cmd = new NpgsqlCommand();
+                    cmd.CommandTimeout = DBtimeOut;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = conn;
+                    cmd.CommandText = query;
+
+                    NpgsqlDataAdapter adap = new NpgsqlDataAdapter(cmd);
+                    cmd.Parameters.AddRange(param);
+                    adap.Fill(dt);
+                    cmd.Parameters.Clear();
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+
+            }
+            return dt;
+        }
+
 
         public int InsertQuery(string query, NpgsqlParameter[] param)
         {

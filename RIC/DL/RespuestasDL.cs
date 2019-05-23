@@ -63,6 +63,7 @@ namespace RIC.DL
                     {
                         Respuesta objResp = new Respuesta();
 
+                        objResp.strIdResp = row["idrespuesta"].ToString();
                         objResp.strRespuesta = row["descresp"].ToString();
                         objResp.strMotivo = row["descmotivo"].ToString();
                         objResp.strEstatus = row["descestatus"].ToString();
@@ -81,6 +82,48 @@ namespace RIC.DL
             return lstInventario;
 
         }
+
+
+        public static List<Respuesta> FindRespuestas(String strIdMotivo)
+        {
+
+            List<Respuesta> lstInventario = new List<Respuesta>();
+            Connection objConn = new Connection();
+
+            DataTable dtResp = null;
+
+            try
+            {
+                NpgsqlParameter[] param = new NpgsqlParameter[1];
+
+                param[0] = new NpgsqlParameter("IdMotivo", strIdMotivo);
+
+                dtResp = objConn.LoadDatos(QueryFindRespuestas(), param);
+                if (dtResp.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtResp.Rows)
+                    {
+                        Respuesta objResp = new Respuesta();
+
+                        objResp.strRespuesta = row["descresp"].ToString();
+                        objResp.strMotivo = row["descmotivo"].ToString();
+                        objResp.strEstatus = row["descestatus"].ToString();
+
+
+                        lstInventario.Add(objResp);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstInventario;
+
+        }
+
 
         public static Dictionary<string, string> GetComboMotivo()
         {
@@ -201,11 +244,29 @@ namespace RIC.DL
 
             StringBuilder strQuery = new StringBuilder();
 
-            strQuery.AppendLine(" SELECT descresp, descmotivo, descestatus");
+            strQuery.AppendLine(" SELECT idrespuesta, descresp, descmotivo, descestatus");
             strQuery.AppendLine(" FROM");
             strQuery.AppendLine(" respuestas");
             strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo");
             strQuery.AppendLine(" INNER JOIN estatus ON respuestas.idestatus = estatus.idestatus;");
+
+            return strQuery.ToString();
+
+        }
+
+
+        private static string QueryFindRespuestas()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" SELECT descresp, descmotivo, descestatus");
+            strQuery.AppendLine(" FROM");
+            strQuery.AppendLine(" respuestas");
+            strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo");
+            strQuery.AppendLine(" INNER JOIN estatus ON respuestas.idestatus = estatus.idestatus");
+            strQuery.AppendLine(" where");
+            strQuery.AppendLine(" respuestas.idmotivo = @IdMotivo");
 
             return strQuery.ToString();
 

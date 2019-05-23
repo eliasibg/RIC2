@@ -107,6 +107,55 @@ namespace RIC.Views.Respuestas
 
 
 
+        [Microsoft.AspNetCore.Mvc.ActionName("9427a5e6-8956-4c40-84c9-bbbd62db9484")]
+        public System.Web.Mvc.JsonResult BuscarRespuestas(String strParameters)
+        {
+            try
+            {
+                string[] strParametros = strParameters.Split('|');
+                string strMotivo = strParametros[0];
+                
+
+                var lstRespuestas = RespuestasDL.FindRespuestas(strMotivo);
+
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = lstRespuestas.Count > 0 ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = lstRespuestas.Count > 0 ? "Success" : "No content",
+                    data = lstRespuestas
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
+
+
+
         [Microsoft.AspNetCore.Mvc.ActionName("fb537461-dad4-491e-a46a-7f1048ea62c5")]
         public System.Web.Mvc.JsonResult ComboMotivo()
         {

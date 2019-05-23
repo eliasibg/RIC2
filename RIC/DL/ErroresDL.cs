@@ -24,7 +24,7 @@ namespace RIC.DL
             try
             {
 
-                dtError = objConn.LoadDatos(QueryGetRespuestas());
+                dtError = objConn.LoadDatos(QueryGetErrores());
                 if (dtError.Rows.Count > 0)
                 {
                     foreach (DataRow row in dtError.Rows)
@@ -50,7 +50,60 @@ namespace RIC.DL
 
         }
 
-        private static string QueryGetRespuestas()
+
+        public static List<Error> FindErrores()
+        {
+
+            List<Error> lstError = new List<Error>();
+            Connection objConn = new Connection();
+
+            DataTable dtError = null;
+
+            try
+            {
+
+                dtError = objConn.LoadDatos(QueryGetErrores());
+                if (dtError.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtError.Rows)
+                    {
+                        Error objError = new Error();
+
+                        objError.iId = Convert.ToInt32(row["iderror"].ToString());
+                        objError.strDesc = row["descerror"].ToString();
+                        objError.strEstatus = row["descestatus"].ToString();
+
+
+                        lstError.Add(objError);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstError;
+
+        }
+
+        private static string QueryGetErrores()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" SELECT iderror, descerror, descestatus");
+            strQuery.AppendLine(" FROM");
+            strQuery.AppendLine(" error");
+            strQuery.AppendLine(" INNER JOIN estatus ON error.idestatus = estatus.idestatus;");
+
+            return strQuery.ToString();
+
+        }
+
+
+        private static string QueryFindErrores()
         {
 
             StringBuilder strQuery = new StringBuilder();

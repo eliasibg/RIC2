@@ -3,36 +3,60 @@ $(document).ready(function () {
 
     
 
-    LoadRespuestas();
+    loadComboMotivo();
 
-    
-    $('#dtResp tbody').on('click', 'button', function () {
 
-        var data = $(this).closest('tr').attr("id");
-        var fila = $(this).closest('tr');
 
-        if ($(this).attr("class") == "btn btn-default") {
-
-            modificarResp(fila);
-        } else {
-            alert("borrando " + data);
-        }
-        //alert(data[0] + "'s salary is: " + data[1]);
+    $("#btnBuscar").click(function () {
+        LoadRespuestas();
     });
 
-
 });
+
+
+function loadComboMotivo() {
+
+    $.ajax({
+        url: '/Respuestas/fb537461-dad4-491e-a46a-7f1048ea62c5/'
+        , method: 'GET'
+        , dataType: 'JSON'
+        //, data: "parameters=" + strOrden + "|" + blIsOrden
+        , success: function (source) {
+            //Se valida el estatus de la peticion JSON.
+            if (source !== "" || source !== undefined || source !== null) {
+                if (parseInt(source.data.iIdPeticion) === 200) {
+                    if (parseInt(source.data.iIdEstatus) !== 202) {
+                        returnMessage(2, 1, "Surgió un problema al obtener los datos.");
+                    } else {
+                        if (source.data.data !== null) {
+                            loadControl("cbo", $("#cmbMotivo"), source.data.data, false);
+
+
+                        }
+                    }
+                }
+                else {
+                    returnMessage(3, 1, source.strMensaje);
+                }
+            }
+        }
+    });
+
+}
 
 
 
 function LoadRespuestas() {
 
+    var strMotivo = $("#cmbMotivo").val();
+
+
 
     $.ajax({
-        url: '/Respuestas/5a3ca528-5427-4b94-bed7-156920a71c85/'
+        url: '/Respuestas/9427a5e6-8956-4c40-84c9-bbbd62db9484/'
         , method: 'GET'
         , dataType: 'JSON'
-        //, data: "parameters=" + strOrdenCompleta + "|" + blIsOrden
+        , data: "strParameters=" + strMotivo
         , success: function (source) {
             //Se valida el estatus de la peticion JSON.
             if (source !== "" || source !== undefined || source !== null) {
@@ -45,11 +69,10 @@ function LoadRespuestas() {
 
                             showControls($('#dvDtResp'));
                             $('#dtResp').DataTable({
-                                rowId:'strIdResp',
                                 responsive: false,
                                 lengthMenu: [5, 10, 25, 50, 100],
                                 dom: 'lCfrtip',
-                                order: [[1, 'desc']],
+                                order: [[0, 'desc']],
                                 data: source.data.data,
                                 paging: false,
                                 bAutoWidth: true,
@@ -93,19 +116,7 @@ function LoadRespuestas() {
 
                                     }
                                     , { title: "Estatus", data: "strEstatus", targets: [2], bSortable: true, width: "35%", className: "seccion" }
-                                    , {
-                                        "title": "Modificar",
-                                        "targets": [3],
-                                        "data": null,
-                                        "defaultContent": "<button class='btn btn-default'>Modificar</button>"
-                                    }
-                                    , {
-                                        "title": "Borrar",
-                                        "targets": [4],
-                                        "data": null,
-                                        "defaultContent": "<button class='btn btn-danger'>Borrar</button>"
-                                    }
-
+                                    
                                 ],
 
                                 //Esta funcion secciona la tabla mediante una columna que se le determine.
@@ -139,14 +150,4 @@ function LoadRespuestas() {
             }
         }
     });
-}
-
-
-
-function modificarResp(probando) {
-
-    
-
-    redirectPageMVC("Respuestas", "Modificar", probando.attr('id'));
-
 }
