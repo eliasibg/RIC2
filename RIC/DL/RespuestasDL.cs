@@ -215,6 +215,98 @@ namespace RIC.DL
 
 
 
+        public static List<Respuesta> LoadRespuesta(String strIdResp)
+        {
+
+            List<Respuesta> lstInventario = new List<Respuesta>();
+            Connection objConn = new Connection();
+
+            DataTable dtResp = null;
+
+           
+            try
+            {
+                NpgsqlParameter[] param = new NpgsqlParameter[1];
+
+                param[0] = new NpgsqlParameter("IdResp", Convert.ToInt32(strIdResp));
+
+                dtResp = objConn.LoadDatos(QueryFindRespuesta(), param);
+                if (dtResp.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtResp.Rows)
+                    {
+                        Respuesta objResp = new Respuesta();
+
+                        objResp.strRespuesta = row["descresp"].ToString();
+                        objResp.strMotivo = row["idmotivo"].ToString();
+                        objResp.strEstatus = row["descestatus"].ToString();
+
+
+                        lstInventario.Add(objResp);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lstInventario;
+
+        }
+
+
+
+
+
+
+        public static bool ModificarInventario(string strIdMotivo, string strRespuesta, string strIdResp)
+        {
+            bool blIsOk = true;
+
+            Connection objConn = new Connection();
+
+            using (NpgsqlConnection conn = new NpgsqlConnection(objConn.connectionString))
+            {
+                conn.Open();
+
+                using (NpgsqlTransaction tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+
+                        NpgsqlParameter[] param = new NpgsqlParameter[3];
+
+                        param[0] = new NpgsqlParameter("IdMotivo", strIdMotivo);
+                        param[1] = new NpgsqlParameter("Respuesta", strRespuesta);
+                        param[2] = new NpgsqlParameter("IdResp", Convert.ToInt32(strIdResp));
+
+
+                        int iFirma = objConn.InsertQuery(QueryUpdateResp(), param);
+
+
+                        tr.Commit();
+
+
+                        blIsOk = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                        conn.Close();
+                        return false;
+                    }
+                }
+                conn.Close();
+            }
+            return blIsOk;
+        }
+
+
+
+
 
         private static string QueryTest()
         {
@@ -273,6 +365,24 @@ namespace RIC.DL
         }
 
 
+        private static string QueryFindRespuesta()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" SELECT descresp, respuestas.idmotivo, descestatus");
+            strQuery.AppendLine(" FROM");
+            strQuery.AppendLine(" respuestas");
+            strQuery.AppendLine(" INNER JOIN motivo ON respuestas.idmotivo = motivo.idmotivo");
+            strQuery.AppendLine(" INNER JOIN estatus ON respuestas.idestatus = estatus.idestatus");
+            strQuery.AppendLine(" where");
+            strQuery.AppendLine(" respuestas.idrespuesta = @IdResp");
+
+            return strQuery.ToString();
+
+        }
+
+
         private static string QueryInsertResp()
         {
 
@@ -284,6 +394,21 @@ namespace RIC.DL
             return strQuery.ToString();
 
         }
+
+
+        private static string QueryUpdateResp()
+        {
+
+            StringBuilder strQuery = new StringBuilder();
+
+            strQuery.AppendLine(" update respuestas");
+            strQuery.AppendLine(" set idmotivo = @IdMotivo, descresp = @Respuesta ");
+            strQuery.AppendLine(" where idrespuesta = @IdResp");
+
+            return strQuery.ToString();
+
+        }
+
 
     }
 }

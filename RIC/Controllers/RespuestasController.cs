@@ -249,6 +249,104 @@ namespace RIC.Views.Respuestas
             }
         }
 
+        [Microsoft.AspNetCore.Mvc.ActionName("0b61f612-1089-4047-9b3c-c2d6dc2882fc")]
+        public System.Web.Mvc.JsonResult ModificarResp(String strParameters)
+        {
+            try
+            {
+
+                string[] strParametros = strParameters.Split('|');
+                string strMotivo = strParametros[0];
+                string strResp = strParametros[1];
+                string strIdResp = strParametros[2];
+
+
+                var blExito = RespuestasDL.ModificarInventario(strMotivo, strResp, strIdResp);
+
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = blExito ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = blExito ? "Success" : "No content",
+                    data = blExito
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
+
+
+        [Microsoft.AspNetCore.Mvc.ActionName("93ee7b71-464f-470e-b247-7aac3e511c61")]
+        public System.Web.Mvc.JsonResult LoadRespuesta(String strParameters)
+        {
+            try
+            {
+                string[] strParametros = strParameters.Split('|');
+                string strIdResp = strParametros[0];
+
+
+                var lstRespuestas = RespuestasDL.LoadRespuesta(strIdResp);
+
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.RequestsCorrect.OK,
+                    iIdEstatus = lstRespuestas.Count > 0 ? Enumeradores.RequestsCorrect.Accepted : Enumeradores.RequestsCorrect.NoContent,
+                    strMensaje = lstRespuestas.Count > 0 ? "Success" : "No content",
+                    data = lstRespuestas
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+                var jsonDataResult = new
+                {
+                    iIdPeticion = Enumeradores.CustomerErrors.BadRequest,
+                    iIdEstatus = Enumeradores.CustomerErrors.Conflict,
+                    strMensaje = string.Format("Se ha presentado el siguiente error: {0}", ex.Message)
+                };
+
+                return new System.Web.Mvc.JsonResult()
+                {
+
+                    Data = jsonDataResult,
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
+
+                };
+            }
+        }
+
 
 
         public IActionResult Crear()

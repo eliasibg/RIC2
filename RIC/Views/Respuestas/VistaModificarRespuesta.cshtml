@@ -81,13 +81,26 @@
     <div class="col-md-9" style="top: 150px; left: 50px">
 
         <div class="tab-content" style="font-size:30px">
-           
-            @*<div>
-                <p>
-                    <button id="test">Test</button>
-                </p>
 
-            </div>*@
+            <div class="col-lg-6 col-md-6 col-xs-6" style="margin-left:2%;">
+                <select id="cmbMotivo" name="cboMotivo" style="width:100%;height:5%;"><option value="">- Selccione un motivo -</option></select>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-6" style="margin-left:2%; top: 20px;">
+                <label>Respuesta</label>
+                @*<input id="txtBuscar" onkeypress="return onlyNumbersLetters(event, 'num_car'), event.charCode >= 48 && event.charCode <= 57 || event.charCode == 8 || event.charCode == 0" name="buscar" size="20" placeholder="Buscar Orden" maxlength="9" />*@
+                <input id="txtRespuesta" name="resp" size="100" placeholder="Buscar Orden" maxlength="100" />
+            </div>
+
+
+
+
+            <div class="col-lg-6 col-md-6 col-xs-6" style="text-align:right; top:20px">
+                <button type="submit" class="btn-lg btn-primary" id="btnGuardar"><i class="fa btn-default">Guardar</i></button>
+                <button type="submit" class="btn-lg btn-primary" id="btnLimpiar"><i class="fa fa-eraser"></i></button>
+            </div>
+
+
+
         </div>
     </div>
 
@@ -95,4 +108,6 @@
 
 
 <script src="~/js/jquery-1.11.3.min.js"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="~/js/Respuesta/VistaModificarResp.js"></script>
+<script src="~/js/Herramientas.js"></script>
