@@ -1,8 +1,10 @@
 ﻿
 $(document).ready(function () {
 
-  
 
+    $("#test").click(function () {
+        Testing();
+    });
 
 });
 
@@ -11,7 +13,7 @@ function Testing() {
 
 
     $.ajax({
-        url: '/Respuestas/Testing/'
+        url: '/Respuestas/73092df3-02a7-4878-b1ac-7b26cfa27d88'
         , method: 'GET'
         , dataType: 'JSON'
         //, data: "parameters=" + strOrdenCompleta + "|" + blIsOrden
@@ -23,7 +25,7 @@ function Testing() {
                         returnMessage(2, 1, "Surgió un problema al obtener los datos.");
                     } else {
 
-                        alert("Exito");
+                        alert("Conexión exitosa");
 
                     }
                 }
